@@ -1,6 +1,18 @@
 'use client';
-import CommonAuthComponent from '@/components/commonauth.component';
+import CommonAuthComponent, {
+  ISubmitFunction,
+} from '@/components/commonauth.component';
+import { useAuthContext } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
-  return <CommonAuthComponent type="register" />;
+  const { register } = useAuthContext();
+  const navigation = useRouter();
+  const handleRegister = ({ email, password }: ISubmitFunction) => {
+    register(email, password).then(() => {
+      navigation.push('/');
+    });
+  };
+
+  return <CommonAuthComponent type="register" handleSubmit={handleRegister} />;
 }

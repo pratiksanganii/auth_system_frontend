@@ -1,13 +1,13 @@
-'use client';
+"use client";
 import React, {
   createContext,
   useContext,
   useState,
   useEffect,
   ReactNode,
-} from 'react';
-import * as authApi from '../api/authApi';
-import { LOCAL_STORAGE } from '@/globals';
+} from "react";
+import * as authApi from "../api/authApi";
+import { LOCAL_STORAGE } from "@/globals";
 
 interface User {
   id: string;
@@ -42,10 +42,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const localUser = localStorage.getItem(LOCAL_STORAGE.USER);
-    if (localUser) setUser(JSON.parse(localUser));
-    else getCurrentUser();
-  }, [setUser]);
+    getCurrentUser();
+  }, []);
 
   const login = async (email: string, password: string) => {
     await commonOps(() => authApi.login(email, password));
@@ -69,7 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(setNull ? null : (user as User));
       if (!setNull && user) {
         const resData: IResponse = user as IResponse;
-        localStorage.setItem(LOCAL_STORAGE.USER, JSON.stringify(resData.user));
         localStorage.setItem(LOCAL_STORAGE.TOKEN, resData.accessToken);
         localStorage.setItem(LOCAL_STORAGE.REFRESH_TOKEN, resData.refreshToken);
       }
@@ -94,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined)
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
 
   return context;
 }

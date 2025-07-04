@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!user) getCurrentUser();
     else navigator.push('/');
-  }, [user]);
+  }, [user, navigator]);
 
   const login = async (email: string, password: string) => {
     await commonOps(() => authApi.login(email, password));

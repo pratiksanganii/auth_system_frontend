@@ -6,11 +6,8 @@ RUN npm install
 
 COPY . .
 
-# Declare build-time ARG
-ARG ENV_FILE=.env
 
-# Copy env file passed via ARG
-COPY ${ENV_FILE} .env.local
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 RUN npm run build
 # Expose the port Next.js runs on

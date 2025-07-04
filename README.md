@@ -95,6 +95,29 @@ docker run -d --build-arg NEXT_PUBLIC_API_URL=https://apiauthsystem.pratiksangan
 
 ---
 
+## How Authentication Works (High-Level)
+
+1. **User Registration & Login:**
+   - Users register or log in with their email and password via the frontend.
+   - The frontend sends these credentials to the backend API.
+
+2. **Token Issuance:**
+   - On successful authentication, the backend responds with an access token (short-lived) and a refresh token (longer-lived).
+   - These tokens are stored securely on the client (e.g., in local storage).
+
+3. **Accessing Protected Routes:**
+   - For protected API requests (like `/user/me`), the frontend includes the access token in the request headers.
+   - The backend verifies the access token before granting access.
+
+4. **Session Continuity:**
+   - If the access token expires, the frontend automatically uses the refresh token to request a new access token from the backend, keeping the user logged in without interruption.
+   - If the refresh token also expires, the user is logged out and must log in again.
+
+5. **Logout:**
+   - Logging out clears both tokens from the client, ending the session.
+
+---
+
 ## Contact
 
 For any questions, please contact:

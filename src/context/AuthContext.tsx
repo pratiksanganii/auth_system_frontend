@@ -1,13 +1,14 @@
-"use client";
+'use client';
 import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
   ReactNode,
-} from "react";
-import * as authApi from "../api/authApi";
-import { LOCAL_STORAGE } from "@/globals";
+  useEffect,
+} from 'react';
+import * as authApi from '../api/authApi';
+import { LOCAL_STORAGE } from '@/globals';
+import { useRouter } from 'next/navigation';
 
 interface User {
   id: string;
@@ -36,14 +37,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const navigator = useRouter();
   const getCurrentUser = async () => {
     await commonOps(authApi.getCurrentUser);
   };
 
   useEffect(() => {
-    getCurrentUser();
-  }, []);
+    if (!user) getCurrentUser();
+    else navigator.push('/');
+  }, [user]);
 
   const login = async (email: string, password: string) => {
     await commonOps(() => authApi.login(email, password));
@@ -64,11 +66,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const user: unknown = await callAPI();
       const err = (user as { errMsg: string })?.errMsg;
       if (err) throw new Error(err);
-      setUser(setNull ? null : (user as User));
+      setUser((setNull ? null : (user as IResponse).user) as User);
       if (!setNull && user) {
         const resData: IResponse = user as IResponse;
-        localStorage.setItem(LOCAL_STORAGE.TOKEN, resData.accessToken);
-        localStorage.setItem(LOCAL_STORAGE.REFRESH_TOKEN, resData.refreshToken);
+        if (resData?.accessToken) {
+          localStorage.setItem(LOCAL_STORAGE.TOKEN, resData.accessToken);
+          localStorage.setItem(
+            LOCAL_STORAGE.REFRESH_TOKEN,
+            resData.refreshToken
+          );
+        }
+      } else if (setNull) {
+        localStorage.removeItem(LOCAL_STORAGE.TOKEN);
+        localStorage.removeItem(LOCAL_STORAGE.REFRESH_TOKEN);
       }
     } catch (e: unknown) {
       if (!setNull) setUser(null);
@@ -91,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined)
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
 
   return context;
 }

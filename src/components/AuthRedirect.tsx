@@ -13,7 +13,7 @@ export default function AuthRedirect({
 
   useEffect(() => {
     if (user) router.push('/');
-  }, [user]);
+  }, [user, router]);
 
   return <>{children}</>;
 }

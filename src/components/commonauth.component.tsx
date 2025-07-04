@@ -1,7 +1,9 @@
-"use client";
-import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { toast } from "sonner";
+'use client';
+import { useAuthContext } from '@/context/AuthContext';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export interface ISubmitFunction {
   email: string;
@@ -12,21 +14,24 @@ export default function CommonAuthComponent({
   type,
   handleSubmit,
 }: {
-  type: "register" | "login";
+  type: 'register' | 'login';
   handleSubmit: ({ email, password }: ISubmitFunction) => void;
 }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { user } = useAuthContext();
+  const navigator = useRouter();
+
+  useEffect(() => {
+    if (user) navigator.push('/');
+  }, [user, navigator]);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // check valid email
-    console.log({e:email.length})
-    console.log({p:password.length})
-    if (email?.length < 3 || !email.includes("@"))
-      toast.error("Provide valid email.");
+    if (email?.length < 3 || !email.includes('@'))
+      toast.error('Provide valid email.');
     // check valid password
-    else if (password?.length < 8) toast.error("Provide valid password.");
+    else if (password?.length < 8) toast.error('Provide valid password.');
     else handleSubmit({ email, password });
   };
 
@@ -36,7 +41,7 @@ export default function CommonAuthComponent({
         {/* Dotted background layer */}
         {/* <div className="absolute inset-0 bg-dotted-white" /> */}
         <h1 className="text-white text-2xl font-bold mb-6 text-center">
-          {type == "register" ? "Register" : "Login"}
+          {type == 'register' ? 'Register' : 'Login'}
         </h1>
         <form className="relative z-10 flex flex-col gap-7" onSubmit={onSubmit}>
           <input
@@ -57,16 +62,16 @@ export default function CommonAuthComponent({
             type="submit"
             className="mt-2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
           >
-            {type == "register" ? "Sign Up" : "Sign In"}
+            {type == 'register' ? 'Sign Up' : 'Sign In'}
           </button>
         </form>
         <p className="text-white text-center mt-4">
-          {type == "register" ? "Already" : "Don't"} have an account?{" "}
+          {type == 'register' ? 'Already' : "Don't"} have an account?{' '}
           <Link
-            href={`/auth/${type == "register" ? "login" : "register"}`}
+            href={`/auth/${type == 'register' ? 'login' : 'register'}`}
             className="text-blue-400 hover:underline font-semibold"
           >
-            {type == "register" ? "Login" : "Register"}
+            {type == 'register' ? 'Login' : 'Register'}
           </Link>
         </p>
       </div>

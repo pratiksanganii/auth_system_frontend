@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Auth System – Full Stack Project
 
-## Getting Started
+A robust authentication system featuring a modern frontend and secure backend, designed for user registration, login, and session management with JWT tokens.
 
-First, run the development server:
+---
+
+## Live Demo
+
+- **Frontend:** [https://authsystem.pratiksangani.com/](https://authsystem.pratiksangani.com/)
+- **Backend API:** [https://apiauthsystem.pratiksangani.com/](https://apiauthsystem.pratiksangani.com/)
+
+---
+
+## Features
+
+- **User Registration** with email and password
+- **User Login** with email and password
+- **Session Management** using access and refresh tokens
+- **Protected Route:** `/user/me` (accessible only with valid authentication)
+- **Token Expiry:**
+  - Access Token: 8 hours
+  - Refresh Token: 48 hours
+
+---
+
+## Tech Stack
+
+- **Frontend:** Next.js, React, TypeScript
+- **Backend:** (Hosted separately, see API URL)
+- **Authentication:** JWT (JSON Web Tokens)
+
+---
+
+## Project Structure
+
+```
+src/
+  api/           # API utilities
+  app/           # Next.js app directory (pages, layouts)
+  components/    # Reusable React components
+  context/       # React Context for authentication
+  globals.ts     # Global types or constants
+public/          # Static assets
+```
+
+---
+
+## Getting Started (Frontend)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/pratiksanganii/auth_system_frontend.git
+cd auth_system_frontend
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file
+NEXT_PUBLIC_API_URL=https://apiauthsystem.pratiksangani.com
+
+### 4. Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Docker Deployment
 
-## Learn More
+### Build and Run with Docker
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker build -t auth-frontend .
+docker run -d --build-arg NEXT_PUBLIC_API_URL=https://apiauthsystem.pratiksangani.com -p 3000:3000 --name auth-frontend auth-frontend
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Authentication & Session Management
 
-## Deploy on Vercel
+- On login/register, the backend issues an **access token** (expires in 8h) and a **refresh token** (expires in 48h).
+- Tokens are securely stored and used for authenticating API requests.
+- The `/user/me` endpoint is protected and requires a valid access token.
+- When the access token expires, the refresh token is used to obtain a new access token (session remains active until refresh token expires).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+
+For any questions, please contact:
+Pratik Sangani
+pratikpsangani2003@gmail.com
+
+---
